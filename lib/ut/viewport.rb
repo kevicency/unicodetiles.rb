@@ -35,7 +35,7 @@ module UT
     end
 
     def render_height
-      height * tile_size
+      height * @renderer.tile_size
     end
 
     def center_x
