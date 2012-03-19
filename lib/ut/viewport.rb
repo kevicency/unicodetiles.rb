@@ -1,17 +1,17 @@
 module UT
   class Viewport
+    attr_accessor :renderer
     attr_accessor :top, :left
     attr_accessor :width, :height
 
     def initialize options={}
-      @window = options[:window] || $window
-      @renderer = options[:renderer]
-      @tiles = {}
-
+      self.renderer = options[:renderer]
       self.left = options[:left] || 0
       self.top = options[:top] || 0
       self.width = options[:width]
       self.height = options[:height]
+
+      @tiles = {}
     end
 
     def clear
@@ -20,10 +20,6 @@ module UT
 
     def update_tile x, y, tile
       @tiles[[x,y]] = tile
-    end
-
-    def update delta
-
     end
 
     def draw
@@ -35,7 +31,7 @@ module UT
     end
 
     def render_width
-      width * tile_size
+      width * @renderer.tile_size
     end
 
     def render_height

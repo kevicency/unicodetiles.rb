@@ -1,9 +1,11 @@
+require 'gosu'
+
 module UT
   class FontRenderer
     attr_accessor :tile_size
 
     def initialize options
-      @window = options[:window] || $window || (raise ArgumentError.new "window is nil")
+      @window = options[:window] || $window
       @font_name = options[:font_name]
       @tile_size = options[:tile_size]
       reload_font
@@ -28,7 +30,7 @@ module UT
     end
 
     def font
-      font
+      @font
     end
 
     def render tile, left, top
