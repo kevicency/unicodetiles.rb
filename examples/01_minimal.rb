@@ -1,4 +1,5 @@
 require_relative '../lib/ut'
+require 'set'
 
 class Window < Gosu::Window
   attr_accessor :engine

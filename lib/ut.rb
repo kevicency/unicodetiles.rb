@@ -3,7 +3,6 @@ $LOAD_PATH << './lib'
 require 'rubygems'
 require 'bundler/setup'
 
-require 'set'
 require 'gosu'
 
 require 'ut/tile'
