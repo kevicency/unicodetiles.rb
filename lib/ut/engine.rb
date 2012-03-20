@@ -7,12 +7,8 @@ module UT
       @resolve_tile = options[:resolve_tile] || lambda {|x,y| NULLTILE }
     end
 
-    def to_resolve_tile &blk
+    def resolve_tile &blk
       @resolve_tile = blk
-    end
-
-    def resolve_tile x, y
-      @resolve_tile.call x, y
     end
 
     def update world_x, world_y
@@ -24,6 +20,14 @@ module UT
           @viewport.update_tile xi, yi, (@resolve_tile.call x+xi,y+yi)
         end
       end
+    end
+
+    def cache_enabled?
+      @cache_enabled
+    end
+
+    def cache_enabled= value
+      @cache_enabled = value
     end
   end
 end
