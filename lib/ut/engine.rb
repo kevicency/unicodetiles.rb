@@ -4,11 +4,12 @@ module UT
 
     def initialize options = {}
       @viewport = options[:viewport] || (raise ArgumentError.new "viewport is nil")
-      @resolve_tile = options[:resolve_tile] || lambda {|x,y| NULLTILE }
+      @fetch_tile = options[:fetch_tile] || lambda {|x,y| NULLTILE }
+      @cache = {}
     end
 
-    def resolve_tile &blk
-      @resolve_tile = blk
+    def fetch_tile &blk
+      @fetch_tile = blk
     end
 
     def update world_x, world_y
@@ -17,7 +18,11 @@ module UT
 
       @viewport.width.times do |xi|
         @viewport.height.times do |yi|
-          @viewport.update_tile xi, yi, (@resolve_tile.call x+xi,y+yi)
+          tx, ty = x+xi, y+yi
+          tile = @cache[[tx, ty]] if cache_enabled?
+          tile ||= @fetch_tile.call tx, ty
+          @cache[[tx, ty]] = tile if cache_enabled?
+          @viewport.update_tile xi, yi, tile
         end
       end
     end
