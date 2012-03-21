@@ -19,10 +19,10 @@ module UT
       end
 
       it "updates tile in the viewport" do
-        subject.viewport.should_receive(:update_tile).with(0,0, {x:4,y:2})
-        subject.viewport.should_receive(:update_tile).with(1,0, {x:5,y:2})
-        subject.viewport.should_receive(:update_tile).with(0,1, {x:4,y:3})
-        subject.viewport.should_receive(:update_tile).with(1,1, {x:5,y:3})
+        subject.viewport.should_receive(:put_tile).with(0,0, {x:4,y:2})
+        subject.viewport.should_receive(:put_tile).with(1,0, {x:5,y:2})
+        subject.viewport.should_receive(:put_tile).with(0,1, {x:4,y:3})
+        subject.viewport.should_receive(:put_tile).with(1,1, {x:5,y:3})
 
         subject.update 5,4
       end

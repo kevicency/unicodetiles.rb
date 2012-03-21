@@ -4,9 +4,9 @@ module UT
   describe Tile do
     describe '#initialize' do
       context 'without args' do
-        its(:glyph) { should == NULLGLYPH }
-        its(:foreground) { should == DEFAULT_FOREGROUND }
-        its(:background) { should == DEFAULT_BACKGROUND }
+        its(:glyph) { should == " " }
+        its(:foreground) { should == Tile::DEFAULT_FOREGROUND }
+        its(:background) { should == Tile::DEFAULT_BACKGROUND }
       end
 
       context 'with args' do

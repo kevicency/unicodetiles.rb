@@ -54,10 +54,10 @@ module UT
       end
     end
 
-    describe "#update_tile" do
+    describe "#put_tile" do
       it "updates the tile at the specified location" do
         tile = double(Tile)
-        subject.update_tile 1, 1, tile
+        subject.put_tile 1, 1, tile
         (subject.instance_variable_get :@tiles) == {[1,1] => tile}
       end
 
@@ -65,8 +65,8 @@ module UT
         before do
           tile1 = double(Tile, :id => 1)
           @tile2 = double(Tile, :id => 2)
-          subject.update_tile 1, 1, tile1
-          subject.update_tile 1, 1, @tile2
+          subject.put_tile 1, 1, tile1
+          subject.put_tile 1, 1, @tile2
         end
 
         it "replaces the tile" do
@@ -83,8 +83,8 @@ module UT
         subject.renderer = renderer
         @tile1 = double(Tile, :id => 1)
         @tile2 = double(Tile, :id => 2)
-        subject.update_tile 0, 0, @tile1
-        subject.update_tile 1, 1, @tile2
+        subject.put_tile 0, 0, @tile1
+        subject.put_tile 1, 1, @tile2
       end
 
       it "tells the renderer to draw each tile" do
