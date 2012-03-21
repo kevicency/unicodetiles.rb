@@ -38,7 +38,7 @@ $window = Window.new 48*14, 48*10
 @renderer = UT::FontRenderer.new :font_name => "fonts/DejaVuSansMono.ttf", :tile_size => 48
 @viewport = UT::Viewport.new :renderer => @renderer, :width => 14, :height => 10
 @engine = UT::Engine.new :viewport => @viewport, :resolve_tile => lambda {|x,y| UT::Tile.new :glyph => ((x%3+y%3)==0?"#":" ")}
-@engine.resolve_tile do |x,y|
+@engine.fetch_tile = lambda do |x,y|
   UT::Tile.new :glyph => (x%3+y%3==0?"#":" "), :background => Gosu::Color.from_hsv((x+y)%360,1,1)
 end
 $window.engine = @engine

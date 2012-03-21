@@ -12,7 +12,6 @@ module UT
       tile = @cache[[x, y]] if cache_enabled?
       tile ||= @fetch_tile.call x, y
       @cache[[x, y]] = tile if cache_enabled?
-      puts @cache
       tile
     end
 
