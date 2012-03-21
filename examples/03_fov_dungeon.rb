@@ -46,6 +46,9 @@ $window = Window.new WINDOW_WIDTH, WINDOW_HEIGHT
 @engine.set_source do |x,y|
   @dungeon.get_tile x, y
 end
+@engine.set_mask do |x,y|
+  @dungeon.is_visible? x, y
+end
 
 $window.dungeon = @dungeon
 $window.engine = @engine

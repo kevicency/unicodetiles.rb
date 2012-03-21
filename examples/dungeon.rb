@@ -1,6 +1,8 @@
 #encoding: utf-8
+require_relative 'fov'
 
 class Dungeon
+  include ShadowcastingFieldOfView
   attr_reader :px, :py
 
   AT_TILE = UT::Tile.new :glyph => "@"
@@ -42,6 +44,7 @@ class Dungeon
       " #...............#            ",
       " #################            "
     ]
+    update_fov
   end
 
   def width
@@ -52,7 +55,7 @@ class Dungeon
     @map.length
   end
 
-  def get_tile x,y
+  def get_tile x, y
     return UT::NULLTILE if x<0 || y<0
     return AT_TILE if x==@px && y==@py
 
@@ -71,6 +74,29 @@ class Dungeon
 
   def move_player dx, dy
     destination = get_tile @px+dx, @py+dy
-    @px,@py = @px+dx, @py+dy if destination == FLOOR_TILE
+    if destination == FLOOR_TILE
+      @px,@py = @px+dx, @py+dy
+      update_fov
+    end
+  end
+
+  def is_visible? x, y
+    @mask[[x,y]] || false
+  end
+
+  private
+
+  def update_fov
+    @mask = {}
+    do_fov @px, @py, 5
+  end
+
+  def blocked? x, y
+    return true if x < 0 || y < 0
+    return @map[y][x] == "#"
+  end
+
+  def light x, y
+    @mask[[x,y]] = true
   end
 end
