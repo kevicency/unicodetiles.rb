@@ -41,8 +41,8 @@ module UT
     end
 
     def fetch x, y
-      return NULLTILE unless in_world? x, y
-      return NULLTILE unless is_visible? x, y
+      return nil unless in_world? x, y
+      return nil unless is_visible? x, y
 
       tile = @cache[[x, y]] if cache_enabled?
       tile ||= @source.call x, y

@@ -11,6 +11,7 @@ class Shader
   end
 
   def apply tile, x, y
+    return tile if tile.nil?
     anim = @time/1000.0
     anim = (anim - anim.floor - 0.5).abs + 0.5
     dist = distance @x, @y, x, y

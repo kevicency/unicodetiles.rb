@@ -1,6 +1,7 @@
 # encoding: utf-8
-require_relative 'helper'
+
 require_relative '../lib/ut'
+require_relative 'helper'
 require 'set'
 
 

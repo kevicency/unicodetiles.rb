@@ -1,5 +1,3 @@
-require 'gosu'
-
 module UT
   class FontRenderer
     attr_accessor :tile_size
@@ -35,12 +33,12 @@ module UT
 
     def render tile, left, top
       @window.draw_quad left          , top            , tile.background,
-                        left+tile_size, top            , tile.background,
-                        left          , top + tile_size, tile.background,
-                        left+tile_size, top + tile_size, tile.background
+        left+tile_size, top            , tile.background,
+        left          , top + tile_size, tile.background,
+        left+tile_size, top + tile_size, tile.background
 
       @font.draw_rel tile.glyph, left+tile_size/2, top+tile_size/2,
-                     0, 0.5, 0.5, 1, 1, tile.foreground
+        0, 0.5, 0.5, 1, 1, tile.foreground
     end
 
     private

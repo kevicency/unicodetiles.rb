@@ -56,7 +56,7 @@ class Dungeon
   end
 
   def get_tile x, y
-    return UT::NULLTILE if x<0 || y<0
+    return nil if x<0 || y<0
     return AT_TILE if x==@px && y==@py
 
     char = @map[y][x]
@@ -69,7 +69,7 @@ class Dungeon
       UT::NULLTILE
     end
   rescue
-    UT::NULLTILE
+    nil
   end
 
   def move_player dx, dy
