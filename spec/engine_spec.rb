@@ -2,21 +2,20 @@ require 'spec_helper'
 
 module UT
   describe Engine do
-    describe "#initialize" do
-      subject do
-        Engine.new :viewport => :viewport,
-                   :fetch_tile => :fetch_tile
-      end
-
-      its(:viewport) { should == :viewport }
+    let(:viewport) { double(Viewport) }
+    subject do
+      Engine.new :viewport => viewport
     end
 
+    its(:viewport) { should == viewport }
+
     describe "#update" do
-      subject { Engine.new :viewport => double(Viewport) }
       before do
-        subject.viewport.stub(:center_x => 1, :center_y => 2)
-        subject.viewport.stub(:width => 2, :height => 2)
-        subject.fetch_tile = lambda {|x,y| {x:x, y:y}}
+        viewport.stub(:center_x => 1, :center_y => 2)
+        viewport.stub(:width => 2, :height => 2)
+        def subject.fetch x, y
+          {x:x, y:y}
+        end
       end
 
       it "updates tile in the viewport" do
@@ -30,29 +29,39 @@ module UT
 
     end
 
-    describe "#fetch_tile" do
+    describe "#fetch" do
+      let(:source) { double("source") }
+      before { subject.set_source = source}
+      it "calls the source to fetch a tile" do
+        source.should_receive(:call).with(1, 2).and_return
+
+        subject.fetch 1, 2
+      end
+
+      it "returns the tile from the source" do
+        tile = Tile.new
+        source.stub(:call => tile)
+
+        (subject.fetch 0, 0).should == tile
+      end
+
       context "when cache is enabled" do
         before do
           subject.cache_enabled = true
         end
 
         it "fetches a tile only once" do
-          fetch_double = double("fetch")
-          fetch_double.should_receive(:call).with(0,0).once.and_return Tile.new
+          source.should_receive(:call).with(0,0).once.and_return Tile.new
 
-          subject.fetch_tile = fetch_double
-
-          2.times { subject.fetch_tile 0,0 }
+          2.times { subject.fetch 0,0 }
         end
 
         it "cached tile is same as fetched tile" do
           tile = Tile.new
-          fetch_double = double("fetch")
-          fetch_double.should_receive(:call).with(0,0).and_return tile
-          subject.fetch_tile = fetch_double
+          source.should_receive(:call).with(0,0).and_return tile
 
-          subject.fetch_tile 0, 0
-          subject.fetch_tile(0, 0).should == tile
+          subject.fetch 0, 0
+          subject.fetch(0, 0).should == tile
         end
       end
     end
