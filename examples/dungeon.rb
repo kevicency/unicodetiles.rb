@@ -88,7 +88,7 @@ class Dungeon
 
   def update_fov
     @mask = {}
-    do_fov @px, @py, 5
+    do_fov @px, @py, 7
   end
 
   def blocked? x, y

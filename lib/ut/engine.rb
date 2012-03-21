@@ -47,7 +47,7 @@ module UT
       tile = @cache[[x, y]] if cache_enabled?
       tile ||= @source.call x, y
       @cache[[x, y]] = tile if cache_enabled?
-      tile
+      apply_shader tile, x ,y
     end
 
     def apply_shader tile, x, y
