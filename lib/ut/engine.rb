@@ -3,13 +3,21 @@ module UT
     attr_accessor :viewport, :world_height, :world_width
 
     def initialize options = {}
-      @viewport = options[:viewport] || (raise ArgumentError.new "viewport is nil")
+      @viewport = options[:viewport]
       @fetch_tile = options[:fetch_tile] || lambda {|x,y| NULLTILE }
       @cache = {}
     end
 
-    def fetch_tile &blk
-      @fetch_tile = blk
+    def fetch_tile x, y
+      tile = @cache[[x, y]] if cache_enabled?
+      tile ||= @fetch_tile.call x, y
+      @cache[[x, y]] = tile if cache_enabled?
+      puts @cache
+      tile
+    end
+
+    def fetch_tile= delegate
+      @fetch_tile = delegate
     end
 
     def update world_x, world_y
@@ -19,9 +27,7 @@ module UT
       @viewport.width.times do |xi|
         @viewport.height.times do |yi|
           tx, ty = x+xi, y+yi
-          tile = @cache[[tx, ty]] if cache_enabled?
-          tile ||= @fetch_tile.call tx, ty
-          @cache[[tx, ty]] = tile if cache_enabled?
+          tile = fetch_tile tx, ty
           @viewport.update_tile xi, yi, tile
         end
       end

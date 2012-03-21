@@ -16,9 +16,7 @@ module UT
       before do
         subject.viewport.stub(:center_x => 1, :center_y => 2)
         subject.viewport.stub(:width => 2, :height => 2)
-        subject.fetch_tile do |x,y|
-          {x:x, y:y}
-        end
+        subject.fetch_tile = lambda {|x,y| {x:x, y:y}}
       end
 
       it "updates tile in the viewport" do
@@ -30,31 +28,31 @@ module UT
         subject.update 5,4
       end
 
-      context "when cache enabled" do
+    end
+
+    describe "#fetch_tile" do
+      context "when cache is enabled" do
         before do
           subject.cache_enabled = true
-          subject.viewport.stub(:center_x => 0, :center_y => 0)
-          subject.viewport.stub(:width => 1, :height => 1)
-        end
-        after do
-          2.times { subject.update 0,0 }
         end
 
         it "fetches a tile only once" do
-          subject.viewport.as_null_object
+          fetch_double = double("fetch")
+          fetch_double.should_receive(:call).with(0,0).once.and_return Tile.new
 
-          fetch_tile = double("fetch_tile")
-          fetch_tile.should_receive(:call).with(0,0).once.and_return(Tile.new)
-          subject.instance_variable_set :@fetch_tile, fetch_tile
+          subject.fetch_tile = fetch_double
+
+          2.times { subject.fetch_tile 0,0 }
         end
 
         it "cached tile is same as fetched tile" do
           tile = Tile.new
-          fetch_tile = double("fetch_tile")
-          fetch_tile.should_receive(:call).with(0,0).and_return tile
-          subject.instance_variable_set :@fetch_tile, fetch_tile
+          fetch_double = double("fetch")
+          fetch_double.should_receive(:call).with(0,0).and_return tile
+          subject.fetch_tile = fetch_double
 
-          subject.viewport.should_receive(:update_tile).with(0, 0, tile).twice
+          subject.fetch_tile 0, 0
+          subject.fetch_tile(0, 0).should == tile
         end
       end
     end
