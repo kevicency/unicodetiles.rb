@@ -1,3 +1,3 @@
 # Unicodetiles.rb
 
-Ruby port of [Unicodetiles.js](https://github.com/tapio/unicodetiles.js)
+Ruby Port of [Unicodetiles.js](https://github.com/tapio/unicodetiles.js)
