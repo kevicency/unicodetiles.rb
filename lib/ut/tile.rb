@@ -2,7 +2,7 @@ module UT
 
   NULLGLYPH = " ";
   DEFAULT_FOREGROUND = Gosu::Color::WHITE
-  DEFAULT_BACKGROUND = Gosu::Color::GRAY
+  DEFAULT_BACKGROUND = Gosu::Color::BLACK
 
   class Tile
     attr_accessor :glyph, :foreground, :background

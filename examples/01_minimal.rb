@@ -1,45 +1,34 @@
+# encoding: utf-8
 require_relative '../lib/ut'
 require 'set'
 
+
 class Window < Gosu::Window
-  attr_accessor :engine
+  attr_accessor :viewport
 
   def initialize width, height
     super width, height, false
-    @down_keys = Set.new
-    @px = 0
-    @py = 0
-  end
-
-  def update
-    keys = [Gosu::KbW, Gosu::KbA, Gosu::KbS, Gosu::KbD]
-    deltas = [[0,-1],[-1,0],[0,1],[1,0]]
-    keys.each_with_index do |key, i|
-      if button_down? key
-        unless @down_keys.include? key
-          @px += deltas[i][0]
-          @py += deltas[i][1]
-        end
-      else
-        @down_keys.delete key
-      end
-    end
-    engine.update @px, @py
   end
 
   def draw
-    engine.viewport.draw
+    viewport.draw
   end
 end
 
-$window = Window.new 48*14, 48*10
+$window = Window.new 640, 480
+size = 20
 
-#@renderer = UT::FontRenderer.new :font_name => "Consolas", :tile_size => 24
-@renderer = UT::FontRenderer.new :font_name => "fonts/DejaVuSansMono.ttf", :tile_size => 48
-@viewport = UT::Viewport.new :renderer => @renderer, :width => 14, :height => 10
-@engine = UT::Engine.new :viewport => @viewport
-@engine.set_source do |x,y|
-  UT::Tile.new :glyph => (x%3+y%3==0?"#":" "), :background => Gosu::Color.from_hsv((x+y)%360,1,1)
+@renderer = UT::FontRenderer.new :font_name => "fonts/DejaVuSansMono.ttf", :tile_size => size
+@viewport = UT::Viewport.new :renderer => @renderer, :width => ($window.width/size), :height => ($window.height/size)
+@viewport.put_string 0, 0, "Hello World !", Gosu::Color::CYAN
+@viewport.put_string 0, 1, "Some unicode chars:", Gosu::Color::GREEN, Gosu::Color::GRAY
+%W{☠ ☃ ⚙ ☻ ♞ ☭ ✈ ✟ ✂ ✯}.each_with_index do |c,i|
+  @viewport.put_tile i, 2, (UT::Tile.new :glyph => c, :foreground => Gosu::Color.from_hsv(c.ord%360, 1, 1))
+  puts c.ord
 end
-$window.engine = @engine
+@viewport.put_string 14, 4, "Long strings get automatically wrapped as block"
+@viewport.put_string 13, 7, "or as a line if u want", nil, nil, :line
+@viewport.put_string 20, 9, "or not at all", nil, nil, :none
+
+$window.viewport = @viewport
 $window.show

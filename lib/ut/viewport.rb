@@ -3,6 +3,7 @@ module UT
     attr_accessor :renderer
     attr_accessor :top, :left
     attr_accessor :width, :height
+    attr_accessor :wrap_mode
 
     def initialize options={}
       self.renderer = options[:renderer]
@@ -10,6 +11,7 @@ module UT
       self.top = options[:top] || 0
       self.width = options[:width]
       self.height = options[:height]
+      self.wrap_mode = options[:wrap_mode] || :block
 
       @tiles = {}
     end
@@ -18,8 +20,26 @@ module UT
       @tiles = {}
     end
 
-    def update_tile x, y, tile
+    def put_tile x, y, tile
       @tiles[[x,y]] = tile
+    end
+
+    def put_string x, y, string, foreground = nil, background = nil, wrap_mode = nil
+      counter = 0
+      string.each_char do |c|
+        tx, ty = case wrap_mode || self.wrap_mode
+                 when :block
+                   [x+counter%(width-x), y+(counter/(width-x)).floor]
+                 when :line
+                   [(x+counter)%width, ty = y+((x+counter)/width).floor]
+                 else
+                   [x + counter, y]
+                 end
+        put_tile tx, ty, (Tile.new :glyph => c,
+                          :foreground => foreground,
+                          :background => background)
+        counter += 1;
+      end
     end
 
     def draw

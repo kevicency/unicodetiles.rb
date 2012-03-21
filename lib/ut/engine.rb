@@ -61,7 +61,7 @@ module UT
         @viewport.height.times do |yi|
           tx, ty = x+xi, y+yi
           tile = fetch tx, ty
-          @viewport.update_tile xi, yi, tile
+          @viewport.put_tile xi, yi, tile
         end
       end
     end
@@ -72,6 +72,10 @@ module UT
 
     def cache_enabled= value
       @cache_enabled = value
+    end
+
+    def clear_cache
+      @cache = {}
     end
   end
 end
