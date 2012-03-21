@@ -1,14 +1,14 @@
+require_relative 'helper'
 require_relative '../lib/ut'
+require_relative 'dungeon'
 require 'set'
 
 class Window < Gosu::Window
-  attr_accessor :engine
+  attr_accessor :engine, :dungeon
 
   def initialize width, height
     super width, height, false
     @down_keys = Set.new
-    @px = 0
-    @py = 0
   end
 
   def update
@@ -17,29 +17,36 @@ class Window < Gosu::Window
     keys.each_with_index do |key, i|
       if button_down? key
         unless @down_keys.include? key
-          @px += deltas[i][0]
-          @py += deltas[i][1]
+          @dungeon.move_player deltas[i][0], deltas[i][1]
+          @down_keys << key
         end
       else
         @down_keys.delete key
       end
     end
-    engine.update @px, @py
+    engine.update @dungeon.px, @dungeon.py
   end
 
   def draw
+    draw_quad 0, 0, Gosu::Color::BLACK,
+              width, 0, Gosu::Color::BLACK,
+              0, height, Gosu::Color::BLACK,
+              width, height, Gosu::Color::BLACK
+
     engine.viewport.draw
   end
 end
 
-$window = Window.new 48*14, 48*10
+$window = Window.new WINDOW_WIDTH, WINDOW_HEIGHT
 
-#@renderer = UT::FontRenderer.new :font_name => "Consolas", :tile_size => 24
-@renderer = UT::FontRenderer.new :font_name => "fonts/DejaVuSansMono.ttf", :tile_size => 48
-@viewport = UT::Viewport.new :renderer => @renderer, :width => 14, :height => 10
-@engine = UT::Engine.new :viewport => @viewport
+@dungeon = Dungeon.new
+@renderer = UT::FontRenderer.new :font_name => "fonts/DejaVuSansMono.ttf", :tile_size => TILE_SIZE
+@viewport = UT::Viewport.new :renderer => @renderer, :width => VIEWPORT_WIDTH, :height => VIEWPORT_HEIGHT
+@engine = UT::Engine.new :viewport => @viewport, :world_width => @dungeon.width, :world_height => @dungeon.height
 @engine.set_source do |x,y|
-  UT::Tile.new :glyph => (x%3+y%3==0?"#":" "), :background => Gosu::Color.from_hsv((x+y)%360,1,1)
+  tile = $window.dungeon.get_tile x, y
 end
+
+$window.dungeon = @dungeon
 $window.engine = @engine
 $window.show

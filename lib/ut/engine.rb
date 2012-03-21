@@ -11,6 +11,8 @@ module UT
       @mask = options[:mask] || DEFAULT_MASK
       @shader = options[:shader] || DEFAULT_SHADER
       self.viewport = options[:viewport]
+      self.world_width = options[:world_width]
+      self.world_height = options[:world_height]
       @cache = {}
     end
 
@@ -39,6 +41,9 @@ module UT
     end
 
     def fetch x, y
+      return NULLTILE unless in_world? x, y
+      return NULLTILE unless is_visible? x, y
+
       tile = @cache[[x, y]] if cache_enabled?
       tile ||= @source.call x, y
       @cache[[x, y]] = tile if cache_enabled?
@@ -56,7 +61,6 @@ module UT
     def update world_x, world_y
       x = world_x - @viewport.center_x
       y = world_y - @viewport.center_y
-
       @viewport.width.times do |xi|
         @viewport.height.times do |yi|
           tx, ty = x+xi, y+yi
@@ -76,6 +80,18 @@ module UT
 
     def clear_cache
       @cache = {}
+    end
+
+
+    def in_world? x, y
+      result = true
+      unless world_width.nil?
+        result &&= (x >= 0 && x < world_width)
+      end
+      unless world_height.nil?
+        result &&= (y >= 0 && y< world_height)
+      end
+      result
     end
   end
 end

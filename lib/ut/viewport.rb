@@ -21,7 +21,11 @@ module UT
     end
 
     def put_tile x, y, tile
-      @tiles[[x,y]] = tile
+      if tile.nil?
+        @tiles.delete [x,y]
+      else
+        @tiles[[x,y]] = tile
+      end
     end
 
     def put_string x, y, string, foreground = nil, background = nil, wrap_mode = nil
