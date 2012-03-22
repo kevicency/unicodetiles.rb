@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>tile.rb</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+          <a class="source" href="../ut.html">ut.rb</a>
+          <a class="source" href="engine.html">engine.rb</a>
+          <a class="source" href="font_renderer.html">font_renderer.rb</a>
+          <a class="source" href="tile.html">tile.rb</a>
+          <a class="source" href="version.html">version.rb</a>
+          <a class="source" href="viewport.html">viewport.rb</a>
+      </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>tile.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">UT</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>A <em>Tile</em> stores all attributes required by a <em>Viewport</em> to draw it.
+<code>Tile.new</code> takes an <code>args</code> hash as its only parameter.
+The <code>args</code> hash respects three members:</p>
+
+<ul>
+<li><p><code>:glyph</code>: The unicode character. <em>Defaults to <code>&lsquo; &rsquo;</code>.</em></p></li>
+<li><p><code>:foreground</code>: The foreground color represented by a <code>Gosu::Color</code>
+instance. <em>Defaults to <code>DEFAULT_FOREGROUND</code>.</em></p></li>
+<li><p><code>:background</code>: The background color represented by a <code>Gosu::Color</code>
+instance. <em>Defaults to <code>DEFAULT_BACKGROUND</code>.</em></p></li>
+</ul>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">class</span> <span class="nc">Tile</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>The unicode character</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kp">attr_accessor</span> <span class="ss">:glyph</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-4">&#182;</a>
+        </div>
+        <p>Foreground and background color of the <em>Tile</em>
+Colors are stored as an instance of <code>Gosu::Color</code></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kp">attr_accessor</span> <span class="ss">:foreground</span><span class="p">,</span> <span class="ss">:background</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>The default foreground color is white</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="no">DEFAULT_FOREGROUND</span> <span class="o">=</span> <span class="no">Gosu</span><span class="o">::</span><span class="no">Color</span><span class="o">::</span><span class="no">WHITE</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>the default background color is black</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="no">DEFAULT_BACKGROUND</span> <span class="o">=</span> <span class="no">Gosu</span><span class="o">::</span><span class="no">Color</span><span class="o">::</span><span class="no">BLACK</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-7">&#182;</a>
+        </div>
+        <p>An empty tile wih default fore- and background color</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="no">NULL</span> <span class="o">=</span> <span class="no">Tile</span><span class="o">.</span><span class="n">new</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span> <span class="n">args</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">glyph</span>      <span class="o">=</span> <span class="n">args</span><span class="o">[</span><span class="ss">:glyph</span><span class="o">]</span> <span class="o">||</span> <span class="s2">&quot; &quot;</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">foreground</span> <span class="o">=</span> <span class="n">args</span><span class="o">[</span><span class="ss">:foreground</span><span class="o">]</span> <span class="o">||</span> <span class="no">DEFAULT_FOREGROUND</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">background</span> <span class="o">=</span> <span class="n">args</span><span class="o">[</span><span class="ss">:background</span><span class="o">]</span> <span class="o">||</span> <span class="no">DEFAULT_BACKGROUND</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-8'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-8">&#182;</a>
+        </div>
+        <p>Clones the tile by copying all attributes to a new <em>Tile</em>. Returns the
+cloned tile.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">clone</span>
+      <span class="no">Tile</span><span class="o">.</span><span class="n">new</span> <span class="ss">:glyph</span>      <span class="o">=&gt;</span> <span class="n">glyph</span><span class="p">,</span>
+               <span class="ss">:foreground</span> <span class="o">=&gt;</span> <span class="n">foreground</span><span class="p">,</span>
+               <span class="ss">:background</span> <span class="o">=&gt;</span> <span class="n">background</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>font_renderer.rb</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+          <a class="source" href="../ut.html">ut.rb</a>
+          <a class="source" href="engine.html">engine.rb</a>
+          <a class="source" href="font_renderer.html">font_renderer.rb</a>
+          <a class="source" href="tile.html">tile.rb</a>
+          <a class="source" href="version.html">version.rb</a>
+          <a class="source" href="viewport.html">viewport.rb</a>
+      </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>font_renderer.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">UT</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>The <em>FontRenderer</em> uses the <code>Gosu::Font</code> class to draw the tiles on a
+<code>Gosu::Window</code>.
+<code>FontRenderer.new</code> takes an <code>options</code> hash as its only parameter.
+The <code>options</code> hash respects three members:</p>
+
+<ul>
+<li><p><code>:window</code>: The <code>Gosu::Window</code>. <em>Defaults to <code>$window</code>.</em></p></li>
+<li><p><code>:font_name</code>: Specifies the name of the font. Accepts the same values
+as <code>Gosu::Font.new</code>. <em>Defaults to <code>nil</code>.</em></p></li>
+<li><p><code>:tile_size</code>: The size of the tile on screen. Equivalent to the font
+size. <em>Default to <code>0</code></em>.</p></li>
+</ul>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">class</span> <span class="nc">FontRenderer</span>
+    <span class="kp">attr_accessor</span> <span class="ss">:tile_size</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span> <span class="n">options</span>
+      <span class="vi">@window</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:window</span><span class="o">]</span> <span class="o">||</span> <span class="vg">$window</span>
+      <span class="vi">@font_name</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:font_name</span><span class="o">]</span>
+      <span class="vi">@tile_size</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:tile_size</span><span class="o">]</span> <span class="o">||</span> <span class="mi">0</span>
+      <span class="n">reload_font</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">tile_size</span>
+      <span class="vi">@tile_size</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">tile_size</span><span class="o">=</span> <span class="n">value</span>
+      <span class="vi">@tile_size</span> <span class="o">=</span> <span class="n">value</span>
+      <span class="n">reload_font</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">font_name</span><span class="o">=</span> <span class="n">value</span>
+      <span class="vi">@font_name</span> <span class="o">=</span> <span class="n">value</span>
+      <span class="n">reload_font</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">font_name</span>
+      <span class="vi">@font_name</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>The <code>Gosu::Font</code> instance used for drawing the tiles</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">font</span>
+      <span class="vi">@font</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-4">&#182;</a>
+        </div>
+        <p>Renders the <code>tile</code> width the top-left corner at <code>[left,top]</code> on the
+<code>window</code></p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">render</span> <span class="n">tile</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">top</span>
+      <span class="vi">@window</span><span class="o">.</span><span class="n">draw_quad</span> <span class="n">left</span>          <span class="p">,</span> <span class="n">top</span>            <span class="p">,</span> <span class="n">tile</span><span class="o">.</span><span class="n">background</span><span class="p">,</span>
+        <span class="n">left</span><span class="o">+</span><span class="n">tile_size</span><span class="p">,</span> <span class="n">top</span>            <span class="p">,</span> <span class="n">tile</span><span class="o">.</span><span class="n">background</span><span class="p">,</span>
+        <span class="n">left</span>          <span class="p">,</span> <span class="n">top</span> <span class="o">+</span> <span class="n">tile_size</span><span class="p">,</span> <span class="n">tile</span><span class="o">.</span><span class="n">background</span><span class="p">,</span>
+        <span class="n">left</span><span class="o">+</span><span class="n">tile_size</span><span class="p">,</span> <span class="n">top</span> <span class="o">+</span> <span class="n">tile_size</span><span class="p">,</span> <span class="n">tile</span><span class="o">.</span><span class="n">background</span>
+
+      <span class="vi">@font</span><span class="o">.</span><span class="n">draw_rel</span> <span class="n">tile</span><span class="o">.</span><span class="n">glyph</span><span class="p">,</span> <span class="n">left</span><span class="o">+</span><span class="n">tile_size</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">top</span><span class="o">+</span><span class="n">tile_size</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tile</span><span class="o">.</span><span class="n">foreground</span>
+    <span class="k">end</span>
+
+    <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">reload_font</span>
+      <span class="vi">@font</span> <span class="o">=</span> <span class="no">Gosu</span><span class="o">::</span><span class="no">Font</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@window</span><span class="p">,</span> <span class="vi">@font_name</span><span class="p">,</span> <span class="vi">@tile_size</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>

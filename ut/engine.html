@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>engine.rb</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+          <a class="source" href="../ut.html">ut.rb</a>
+          <a class="source" href="engine.html">engine.rb</a>
+          <a class="source" href="font_renderer.html">font_renderer.rb</a>
+          <a class="source" href="tile.html">tile.rb</a>
+          <a class="source" href="version.html">version.rb</a>
+          <a class="source" href="viewport.html">viewport.rb</a>
+      </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>engine.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">UT</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>The <em>Engine</em> is responsible for fetching the relevant <em>Tile</em>s from the
+<code>source</code> and checking its visibility with the <code>mask</code>. The <em>Tile</em>s are also
+passed to the <code>shader</code> before being finally passed to the <em>Viewport</em>.
+<code>Enigne.new</code> takes an <code>options</code> hash as its only parameter.
+The <code>options</code> hash respects three members:</p>
+
+<ul>
+<li><p><code>:source</code>: The source used to fetch tiles. <em>Defaults to <code>DEFAULT_SOURCE</code></em>.</p></li>
+<li><p><code>:mask</code>: The mask used to determine a tile&rsquo;s visiblity. <em>Defaults to
+<code>DEFAULT_MASK</code></em>.</p></li>
+<li><p><code>:shader</code>: The shader to preprocess tiles. <em>Defaults to
+<code>DEFAULT_SOURCE</code></em>.</p></li>
+<li><p><code>:viewport</code>: The <em>Viewport</em> used for rendering.</p></li>
+<li><p><code>:world_width</code>: The width of the world. <em>Default to <code>nil</code></em>.</p></li>
+<li><p><code>:world_height</code>: The height of the world. <em>Defaults to <code>nil</code></em>.</p></li>
+</ul>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">class</span> <span class="nc">Engine</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>The default shader. Just returns the tile it gets.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="no">DEFAULT_SHADER</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">tile</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="n">tile</span><span class="p">}</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-4">&#182;</a>
+        </div>
+        <p>The default tile source. Always return <code>Tile::NULL</code></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="no">DEFAULT_SOURCE</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="no">Tile</span><span class="o">::</span><span class="no">NULL</span><span class="p">}</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>The default mask. Always returns <code>true</code>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="no">DEFAULT_MASK</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span><span class="o">|</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="kp">true</span><span class="p">}</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>The <em>Viewport</em> used for rendering</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kp">attr_accessor</span> <span class="ss">:viewport</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-7">&#182;</a>
+        </div>
+        <p>The width and height of the world. <em>Tile</em>s &lsquo;outside&rsquo; of the world are
+not passed to the <em>Viewport</em> for rendering.
+If the <code>world_width</code> and <code>world_height</code> are <code>nil</code>, the world is infinte
+and all tiles are rendered.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kp">attr_accessor</span> <span class="ss">:world_height</span><span class="p">,</span> <span class="ss">:world_width</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="vi">@source</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:source</span><span class="o">]</span> <span class="o">||</span> <span class="no">DEFAULT_SOURCE</span>
+      <span class="vi">@mask</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:mask</span><span class="o">]</span> <span class="o">||</span> <span class="no">DEFAULT_MASK</span>
+      <span class="vi">@shader</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:shader</span><span class="o">]</span> <span class="o">||</span> <span class="no">DEFAULT_SHADER</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">viewport</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:viewport</span><span class="o">]</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">world_width</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:world_width</span><span class="o">]</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">world_height</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:world_height</span><span class="o">]</span>
+      <span class="vi">@cache</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-8'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-8">&#182;</a>
+        </div>
+        <p>Takes a block that accepts a <code>tile</code>, <code>x</code> and <code>y</code> and stores it as the
+shader function.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">set_shader</span> <span class="o">&amp;</span><span class="n">blk</span>
+      <span class="vi">@shader</span> <span class="o">=</span> <span class="n">blk</span> <span class="o">||</span> <span class="no">DEFAULT_SHADER</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-9'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-9">&#182;</a>
+        </div>
+        <p>Takes a <em>Proc</em> or <em>lambda</em> which accepts a <code>tile</code>, <code>x</code> and <code>y</code> and stores
+it as the shader function.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">set_shader</span><span class="o">=</span> <span class="n">shader</span>
+      <span class="vi">@shader</span> <span class="o">=</span> <span class="n">shader</span> <span class="o">||</span> <span class="no">DEFAULT_SHADER</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-10'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-10">&#182;</a>
+        </div>
+        <p>Takes a block that accepts <code>x</code> and <code>y</code> and stores it as the
+source function.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">set_source</span> <span class="o">&amp;</span><span class="n">blk</span>
+      <span class="vi">@source</span> <span class="o">=</span> <span class="n">blk</span> <span class="o">||</span> <span class="no">DEFAULT_SOURCE</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-11'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-11">&#182;</a>
+        </div>
+        <p>Takes a <em>Proc</em> or <em>lambda</em> which accepts a <code>x</code> and <code>y</code> and stores
+it as the source function.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">set_source</span><span class="o">=</span> <span class="n">source</span>
+      <span class="vi">@source</span> <span class="o">=</span> <span class="n">source</span> <span class="o">||</span> <span class="no">DEFAULT_SOURCE</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-12'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-12">&#182;</a>
+        </div>
+        <p>Takes a block that accepts <code>x</code> and <code>y</code> and stores it as the
+mask function.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">set_mask</span> <span class="o">&amp;</span><span class="n">blk</span>
+      <span class="vi">@mask</span> <span class="o">=</span> <span class="n">blk</span> <span class="o">||</span> <span class="no">DEFAULT_MASK</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-13'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-13">&#182;</a>
+        </div>
+        <p>Takes a <em>Proc</em> or <em>lambda</em> which accepts a <code>x</code> and <code>y</code> and stores
+it as the mask function.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">set_mask</span><span class="o">=</span> <span class="n">mask</span>
+      <span class="vi">@mask</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">||</span> <span class="no">DEFAULT_MASK</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-14'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-14">&#182;</a>
+        </div>
+        <p>Fetches the <em>Tile</em> at location <code>[x,y]</code> from the source</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">fetch</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+      <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="n">in_world?</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+      <span class="k">return</span> <span class="kp">nil</span> <span class="k">unless</span> <span class="n">is_visible?</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+
+      <span class="n">tile</span> <span class="o">=</span> <span class="vi">@cache</span><span class="o">[[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">]]</span> <span class="k">if</span> <span class="n">cache_enabled?</span>
+      <span class="n">tile</span> <span class="o">||=</span> <span class="vi">@source</span><span class="o">.</span><span class="n">call</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+      <span class="vi">@cache</span><span class="o">[[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">]]</span> <span class="o">=</span> <span class="n">tile</span> <span class="k">if</span> <span class="n">cache_enabled?</span>
+      <span class="n">apply_shader</span> <span class="n">tile</span><span class="p">,</span> <span class="n">x</span> <span class="p">,</span><span class="n">y</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-15'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-15">&#182;</a>
+        </div>
+        <p>Applies the shader to the <code>tile</code> at <code>[x,y]</code></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">apply_shader</span> <span class="n">tile</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+      <span class="vi">@shader</span><span class="o">.</span><span class="n">call</span> <span class="n">tile</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-16'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-16">&#182;</a>
+        </div>
+        <p>Determines the visibility of the <em>Tile</em> at <code>[x,y]</code></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">is_visible?</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+      <span class="vi">@mask</span><span class="o">.</span><span class="n">call</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-17'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-17">&#182;</a>
+        </div>
+        <p>Updates the <em>Engine</em>. <code>world_x</code> and <code>world_y</code> represents the center of the
+world that should be rendered in <em>tile coordinates</em>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">update</span> <span class="n">world_x</span><span class="p">,</span> <span class="n">world_y</span>
+      <span class="n">x</span> <span class="o">=</span> <span class="n">world_x</span> <span class="o">-</span> <span class="vi">@viewport</span><span class="o">.</span><span class="n">center_x</span>
+      <span class="n">y</span> <span class="o">=</span> <span class="n">world_y</span> <span class="o">-</span> <span class="vi">@viewport</span><span class="o">.</span><span class="n">center_y</span>
+      <span class="vi">@viewport</span><span class="o">.</span><span class="n">width</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">xi</span><span class="o">|</span>
+        <span class="vi">@viewport</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">yi</span><span class="o">|</span>
+          <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">x</span><span class="o">+</span><span class="n">xi</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">yi</span>
+          <span class="n">tile</span> <span class="o">=</span> <span class="n">fetch</span> <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span>
+          <span class="vi">@viewport</span><span class="o">.</span><span class="n">put_tile</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">tile</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-18'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-18">&#182;</a>
+        </div>
+        <p>Checks if the cache is enabled.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">cache_enabled?</span>
+      <span class="vi">@cache_enabled</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-19'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-19">&#182;</a>
+        </div>
+        <p>Enables or disables the cache.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">cache_enabled</span><span class="o">=</span> <span class="n">value</span>
+      <span class="vi">@cache_enabled</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-20'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-20">&#182;</a>
+        </div>
+        <p>Clears the cache.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">clear_cache</span>
+      <span class="vi">@cache</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-21'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-21">&#182;</a>
+        </div>
+        <p>Checks if a location is in the world.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">in_world?</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="kp">true</span>
+      <span class="k">unless</span> <span class="n">world_width</span><span class="o">.</span><span class="n">nil?</span>
+        <span class="n">result</span> <span class="o">&amp;&amp;=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">world_width</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">unless</span> <span class="n">world_height</span><span class="o">.</span><span class="n">nil?</span>
+        <span class="n">result</span> <span class="o">&amp;&amp;=</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">y</span><span class="o">&lt;</span> <span class="n">world_height</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="n">result</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>

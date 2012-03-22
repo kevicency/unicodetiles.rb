@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>viewport.rb</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div id="jump_to">
+    Jump To &hellip;
+    <div id="jump_wrapper">
+      <div id="jump_page">
+          <a class="source" href="../ut.html">ut.rb</a>
+          <a class="source" href="engine.html">engine.rb</a>
+          <a class="source" href="font_renderer.html">font_renderer.rb</a>
+          <a class="source" href="tile.html">tile.rb</a>
+          <a class="source" href="version.html">version.rb</a>
+          <a class="source" href="viewport.html">viewport.rb</a>
+      </div>
+    </div>
+  </div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>viewport.rb</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="k">module</span> <span class="nn">UT</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>The <em>viewport</em> stores the <em>Tile</em>s that should be drawn onto the screen as well
+as their location on the screen.
+<code>Viewport.new</code> takes an <code>options</code> hash as its only parameter.
+The <code>options</code> hash respects three members:</p>
+
+<ul>
+<li><p><code>:renderer</code>: The renderer that renders the tiles. <em>Defaults to <code>nil</code>.</em></p></li>
+<li><p><code>:left</code>: Specifies the horizontal offset in <em>pixels</em> from the left side
+of the screen. <em>Defaults to 0</em>.</p></li>
+<li><p><code>:top</code>: Specifies the vertical offset in <em>pixels</em> from the top of the
+screen. <em>Defaults to 0</em>.</p></li>
+<li><p><code>:width</code>: The width of the <em>Viewport</em> in <em>tiles</em>.</p></li>
+<li><p><code>:height</code>: The height of the <em>Viewport</em> in <em>tiles</em>.</p></li>
+<li><p><code>:wrap_mode</code>: The wrap mode for strings. <em>Defaults to <code>:block</code></em>.</p></li>
+</ul>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="k">class</span> <span class="nc">Viewport</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>The renderer used to draw the tiles on screen.
+Must repond to:</p>
+
+<ul>
+<li><p><code>tile_size</code>: Returns the size of the rendered tile in <em>pixel</em>.</p></li>
+<li><p><code>render(tile, left, top)</code>: Renders the <code>tile</code> on screen with the
+top-left corner of the tile located at <code>[left, top]</code>.</p></li>
+</ul>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kp">attr_accessor</span> <span class="ss">:renderer</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-4">&#182;</a>
+        </div>
+        <p>Coordinates of the top-left corner of the <em>Viewport</em>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kp">attr_accessor</span> <span class="ss">:top</span><span class="p">,</span> <span class="ss">:left</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>Width and height of the viewport measured in <em>tiles</em>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kp">attr_accessor</span> <span class="ss">:width</span><span class="p">,</span> <span class="ss">:height</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>A flag which tells the <em>Viewport</em> how to handle strings that are longer
+than <code>width</code>. Accepts the following values:</p>
+
+<ul>
+<li><code>:line</code>: Wraps the string into the next line and starts at the
+beginning of the line.</li>
+<li><code>:block</code>: Wraps the string into the next line and starts at the same
+x-coordinate.</li>
+<li><code>:none</code>: No wrapping of strings</li>
+</ul>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="kp">attr_accessor</span> <span class="ss">:wrap_mode</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span> <span class="n">options</span><span class="o">=</span><span class="p">{}</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">renderer</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:renderer</span><span class="o">]</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:left</span><span class="o">]</span> <span class="o">||</span> <span class="mi">0</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">top</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:top</span><span class="o">]</span> <span class="o">||</span> <span class="mi">0</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:width</span><span class="o">]</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:height</span><span class="o">]</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">wrap_mode</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:wrap_mode</span><span class="o">]</span> <span class="o">||</span> <span class="ss">:block</span>
+
+      <span class="vi">@tiles</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-7'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-7">&#182;</a>
+        </div>
+        <p>Clears all tiles in the <em>Viewport</em></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">clear</span>
+      <span class="vi">@tiles</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-8'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-8">&#182;</a>
+        </div>
+        <p>Stores the <code>tile</code> at location <code>[x,y]</code></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">put_tile</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">tile</span>
+      <span class="k">if</span> <span class="n">tile</span><span class="o">.</span><span class="n">nil?</span>
+        <span class="vi">@tiles</span><span class="o">.</span><span class="n">delete</span> <span class="o">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">]</span>
+      <span class="k">else</span>
+        <span class="vi">@tiles</span><span class="o">[[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">]]</span> <span class="o">=</span> <span class="n">tile</span>
+      <span class="k">end</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-9'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-9">&#182;</a>
+        </div>
+        <p>Puts a <code>string</code> into the <em>Viewport</em> by creating a tile for each character
+and storing them in a line starting at <code>[x,y]</code>. The tiles colors can be
+specified by <code>foreground</code> and <code>background</code>. <code>wrap_mode</code> overrides the
+global <code>wrap_mode</code> of the <em>Viewport</em>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">put_string</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">string</span><span class="p">,</span> <span class="n">foreground</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">background</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">wrap_mode</span> <span class="o">=</span> <span class="kp">nil</span>
+      <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="n">string</span><span class="o">.</span><span class="n">each_char</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+        <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="k">case</span> <span class="n">wrap_mode</span> <span class="o">||</span> <span class="nb">self</span><span class="o">.</span><span class="n">wrap_mode</span>
+                 <span class="k">when</span> <span class="ss">:block</span>
+                   <span class="o">[</span><span class="n">x</span><span class="o">+</span><span class="n">counter</span><span class="sx">%(width-x)</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="p">(</span><span class="n">counter</span><span class="o">/</span><span class="p">(</span><span class="n">width</span><span class="o">-</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">floor</span><span class="o">]</span>
+                 <span class="k">when</span> <span class="ss">:line</span>
+                   <span class="o">[</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">counter</span><span class="p">)</span><span class="o">%</span><span class="n">width</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">y</span><span class="o">+</span><span class="p">((</span><span class="n">x</span><span class="o">+</span><span class="n">counter</span><span class="p">)</span><span class="o">/</span><span class="n">width</span><span class="p">)</span><span class="o">.</span><span class="n">floor</span><span class="o">]</span>
+                 <span class="k">else</span>
+                   <span class="o">[</span><span class="n">x</span> <span class="o">+</span> <span class="n">counter</span><span class="p">,</span> <span class="n">y</span><span class="o">]</span>
+                 <span class="k">end</span>
+        <span class="n">put_tile</span> <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="p">(</span><span class="no">Tile</span><span class="o">.</span><span class="n">new</span> <span class="ss">:glyph</span> <span class="o">=&gt;</span> <span class="n">c</span><span class="p">,</span>
+                          <span class="ss">:foreground</span> <span class="o">=&gt;</span> <span class="n">foreground</span><span class="p">,</span>
+                          <span class="ss">:background</span> <span class="o">=&gt;</span> <span class="n">background</span><span class="p">)</span>
+        <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="k">end</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-10'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-10">&#182;</a>
+        </div>
+        <p>Draws the tiles onto the screen using the <code>renderer</code></p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">draw</span>
+      <span class="vi">@tiles</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">coords</span><span class="p">,</span> <span class="n">tile</span><span class="o">|</span>
+        <span class="n">tleft</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="n">coords</span><span class="o">[</span><span class="mi">0</span><span class="o">]*</span><span class="vi">@renderer</span><span class="o">.</span><span class="n">tile_size</span>
+        <span class="n">ttop</span> <span class="o">=</span> <span class="n">top</span> <span class="o">+</span> <span class="n">coords</span><span class="o">[</span><span class="mi">1</span><span class="o">]*</span><span class="vi">@renderer</span><span class="o">.</span><span class="n">tile_size</span>
+        <span class="vi">@renderer</span><span class="o">.</span><span class="n">render</span> <span class="n">tile</span><span class="p">,</span> <span class="n">tleft</span><span class="p">,</span> <span class="n">ttop</span>
+      <span class="k">end</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-11'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-11">&#182;</a>
+        </div>
+        <p>The width of the <em>Viewport</em> on the screen in <em>pixels</em>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">render_width</span>
+      <span class="n">width</span> <span class="o">*</span> <span class="vi">@renderer</span><span class="o">.</span><span class="n">tile_size</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-12'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-12">&#182;</a>
+        </div>
+        <p>The height of the <em>Viewport</em> on the screen in <em>pixels</em>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">render_height</span>
+      <span class="n">height</span> <span class="o">*</span> <span class="vi">@renderer</span><span class="o">.</span><span class="n">tile_size</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-13'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-13">&#182;</a>
+        </div>
+        <p>The x-coordinate of the center of the <em>Viewport</em> in <em>tiles</em>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">center_x</span>
+      <span class="p">(</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">floor</span>
+    <span class="k">end</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-14'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-14">&#182;</a>
+        </div>
+        <p>The y-coordinate of the center of the <em>Viewport</em> in <em>tiles</em>.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="k">def</span> <span class="nf">center_y</span>
+      <span class="p">(</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">floor</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
