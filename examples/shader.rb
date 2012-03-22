@@ -15,7 +15,7 @@ class Shader
     anim = @time/1000.0
     anim = (anim - anim.floor - 0.5).abs + 0.5
     dist = distance @x, @y, x, y
-    return tile if dist > max_dist
+    return tile if dist > max_dist || dist == 0
     factor = (1.0 - (dist / max_dist)) * light_intensity * anim
     r = (blend light_color.red, tile.foreground.red, factor).round
     g = (blend light_color.green, tile.foreground.green, factor).round
