@@ -30,7 +30,7 @@ CLEAN.include 'docs/index.html'
 # Alias for docs task
 task :doc => :docs
 
-# GITHUB PAGES ===============================================================
+# GITHUB PAGES =======================================
 
 desc 'Update gh-pages branch'
 task :pages => ['docs/.git', :docs] do
