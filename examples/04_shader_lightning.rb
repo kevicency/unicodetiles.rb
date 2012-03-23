@@ -4,45 +4,9 @@ require_relative '../lib/ut'
 require_relative 'helper'
 require_relative 'dungeon'
 require_relative 'shader'
-require 'set'
+require_relative 'example_window'
 
-class Window < Gosu::Window
-  attr_accessor :engine, :dungeon, :shader
-
-  def initialize width, height
-    super width, height, false
-    @down_keys = Set.new
-  end
-
-  def update
-    keys = [Gosu::KbW, Gosu::KbA, Gosu::KbS, Gosu::KbD]
-    deltas = [[0,-1],[-1,0],[0,1],[1,0]]
-    keys.each_with_index do |key, i|
-      if button_down? key
-        unless @down_keys.include? key
-          @dungeon.move_player deltas[i][0], deltas[i][1]
-          @down_keys << key
-        end
-      else
-        @down_keys.delete key
-      end
-    end
-    engine.update @dungeon.px, @dungeon.py
-    shader.center @dungeon.px, @dungeon.py
-    shader.update update_interval
-  end
-
-  def draw
-    draw_quad 0, 0, Gosu::Color::BLACK,
-              width, 0, Gosu::Color::BLACK,
-              0, height, Gosu::Color::BLACK,
-              width, height, Gosu::Color::BLACK
-
-    engine.viewport.draw
-  end
-end
-
-$window = Window.new WINDOW_WIDTH, WINDOW_HEIGHT
+$window = ExampleWindow.new
 
 @dungeon = Dungeon.new
 @shader = Shader.new
