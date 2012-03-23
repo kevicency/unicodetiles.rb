@@ -54,8 +54,12 @@ The <code>options</code> hash respects three members:</p>
 <li><p><code>:window</code>: The <code>Gosu::Window</code>. <em>Defaults to <code>$window</code>.</em></p></li>
 <li><p><code>:font_name</code>: Specifies the name of the font. Accepts the same values
 as <code>Gosu::Font.new</code>. <em>Defaults to <code>nil</code>.</em></p></li>
-<li><p><code>:tile_size</code>: The size of the tile on screen. Equivalent to the font
+<li><p><code>:tile_size</code>: The size of the tile on screen in <em>pixels</em>. Equivalent to the font
 size. <em>Default to <code>0</code></em>.</p></li>
+<li><p><code>:scale_x</code>: Scales the font horizontally by this factor to reduce
+spacing between the chars. <em>Default to 1</em>.</p></li>
+<li><p><code>:scale_y</code>: Scales the font vertically by this factor to reduce spacing
+between the chars. <em>Defaults to 1</em>.</p></li>
 </ul>
       </td>
       <td class=code>
@@ -66,6 +70,8 @@ size. <em>Default to <code>0</code></em>.</p></li>
       <span class="vi">@window</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:window</span><span class="o">]</span> <span class="o">||</span> <span class="vg">$window</span>
       <span class="vi">@font_name</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:font_name</span><span class="o">]</span>
       <span class="vi">@tile_size</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:tile_size</span><span class="o">]</span> <span class="o">||</span> <span class="mi">0</span>
+      <span class="vi">@scale_x</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:scale_x</span><span class="o">]</span> <span class="o">||</span> <span class="mi">1</span>
+      <span class="vi">@scale_y</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:scale_y</span><span class="o">]</span> <span class="o">||</span> <span class="mi">1</span>
       <span class="n">reload_font</span>
     <span class="k">end</span>
 
@@ -117,8 +123,11 @@ size. <em>Default to <code>0</code></em>.</p></li>
         <span class="n">left</span>          <span class="p">,</span> <span class="n">top</span> <span class="o">+</span> <span class="n">tile_size</span><span class="p">,</span> <span class="n">tile</span><span class="o">.</span><span class="n">background</span><span class="p">,</span>
         <span class="n">left</span><span class="o">+</span><span class="n">tile_size</span><span class="p">,</span> <span class="n">top</span> <span class="o">+</span> <span class="n">tile_size</span><span class="p">,</span> <span class="n">tile</span><span class="o">.</span><span class="n">background</span>
 
-      <span class="vi">@font</span><span class="o">.</span><span class="n">draw_rel</span> <span class="n">tile</span><span class="o">.</span><span class="n">glyph</span><span class="p">,</span> <span class="n">left</span><span class="o">+</span><span class="n">tile_size</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">top</span><span class="o">+</span><span class="n">tile_size</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
-        <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tile</span><span class="o">.</span><span class="n">foreground</span>
+      <span class="vi">@font</span><span class="o">.</span><span class="n">draw_rel</span> <span class="n">tile</span><span class="o">.</span><span class="n">glyph</span><span class="p">,</span>
+                     <span class="n">left</span><span class="o">+</span><span class="n">tile_size</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">top</span><span class="o">+</span><span class="n">tile_size</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span>
+                     <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span>
+                     <span class="vi">@scale_x</span><span class="p">,</span> <span class="vi">@scale_y</span><span class="p">,</span>
+                     <span class="n">tile</span><span class="o">.</span><span class="n">foreground</span>
     <span class="k">end</span>
 
     <span class="kp">private</span>
