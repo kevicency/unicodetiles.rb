@@ -9,8 +9,14 @@ module UT
   #   * `:font_name`: Specifies the name of the font. Accepts the same values
   #   as `Gosu::Font.new`. _Defaults to `nil`._
   #
-  #   * `:tile_size`: The size of the tile on screen. Equivalent to the font
+  #   * `:tile_size`: The size of the tile on screen in _pixels_. Equivalent to the font
   #   size. _Default to `0`_.
+  #
+  #   * `:scale_x`: Scales the font horizontally by this factor to reduce
+  #   spacing between the chars. _Default to 1_.
+  #
+  #   * `:scale_y`: Scales the font vertically by this factor to reduce spacing
+  #   between the chars. _Defaults to 1_.
   class FontRenderer
     attr_accessor :tile_size
 
@@ -18,6 +24,8 @@ module UT
       @window = options[:window] || $window
       @font_name = options[:font_name]
       @tile_size = options[:tile_size] || 0
+      @scale_x = options[:scale_x] || 1
+      @scale_y = options[:scale_y] || 1
       reload_font
     end
 
@@ -52,8 +60,11 @@ module UT
         left          , top + tile_size, tile.background,
         left+tile_size, top + tile_size, tile.background
 
-      @font.draw_rel tile.glyph, left+tile_size/2, top+tile_size/2,
-        0, 0.5, 0.5, 1, 1, tile.foreground
+      @font.draw_rel tile.glyph,
+                     left+tile_size/2, top+tile_size/2,
+                     0, 0.5, 0.5,
+                     @scale_x, @scale_y,
+                     tile.foreground
     end
 
     private
